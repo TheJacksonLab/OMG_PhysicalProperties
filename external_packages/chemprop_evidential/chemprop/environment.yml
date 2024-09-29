@@ -1,0 +1,26 @@
+name: chemprop
+
+channels:
+  - conda-forge
+  - pytorch
+  - rdkit
+
+dependencies:
+  - flask
+  - GPy
+  - hyperopt
+  - numpy
+  - pytorch=1.5
+  - rdkit
+  - scikit-learn
+  - scipy
+  - tensorboardX
+  - tensorflow-gpu=1.13
+  - torchvision
+  - tqdm
+  - seaborn
+  - pip
+
+  - pip:
+    - schnetpack
+    - psutil
