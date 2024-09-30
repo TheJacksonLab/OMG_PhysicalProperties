@@ -17,18 +17,17 @@ conda env create -f environment.yml
 To run a script, a file path in the script should be modified to be consistent with an attempted directory.
 
 ### 1. active_learning
-This directory contains scripts to perform active learning campaign based on [evidential learning.](https://proceedings.neurips.cc/paper/2020/hash/aab085461de182608ee9f607f3f7d18f-Abstract.html)  
-To use trained models, download "pareto_greedy_check_point.tar.gz" from [Zotero](TODO) and extract "pareto_greedy_check_point.tar.gz".
-
-## Extract "pareto_greedy_check_point.tar.gz"
+This directory contains scripts to perform active learning campaign based on [evidential learning.](https://proceedings.neurips.cc/paper/2020/hash/aab085461de182608ee9f607f3f7d18f-Abstract.html) 
+To use trained models, download "pareto_greedy_check_point.tar.gz" from [Zotero](TODO) and extract "pareto_greedy_check_point.tar.gz" with the following command.
 ```
 tar -xvzf pareto_greedy_check_point.tar.gz
 ```
+The current file path in the scripts assume that the "pareto_greedy_check_point" directory is located at "./active_learning" 
 
 ### 2. data
-This directory contains quantum chemistry calculation results during the active learning campaign.  
-For example, "./active_learning/pareto_greedy/OMG_train_batch_0_chemprop_with_reaction_id.csv" contains quantum chemistry calculation results from the initial train data.  
-Similarly, "./active_learning/pareto_greedy/OMG_train_batch_1_chemprop_with_reaction_id.csv" contains quantum chemistry calculation results from Round 1.
+This directory contains quantum chemistry calculation results during the active learning campaign. 
+For example, "./active_learning/pareto_greedy/OMG_train_batch_0_chemprop_with_reaction_id.csv" contains quantum chemistry calculation results from the initial train data. 
+Similarly, "./active_learning/pareto_greedy/OMG_train_batch_1_chemprop_with_reaction_id.csv" contains quantum chemistry calculation results from Round 1. 
 This directory also contains 200 RDKit features ("./rdkit_features") used in training ML models to overcome [the local nature of message passing](https://pubs.acs.org/doi/10.1021/acs.jcim.9b00237) in graph neural networks.
 
 ### 3. experimental_chi
