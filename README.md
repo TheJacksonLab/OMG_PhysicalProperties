@@ -34,13 +34,13 @@ This directory also contains 200 RDKit features (`./rdkit_features`) used in tra
 This directory contains scripts to estimate Flory-Huggins interaction parameters from [COSMO-SAC](https://pubs.acs.org/doi/10.1021/ie001047w) calculations.
 
 ### 4. external_packages
-This directory contains external packages including [D-MPNN networks](https://pubs.acs.org/doi/10.1021/acscentsci.1c00546) and [Pareto front search algorithm](https://link.springer.com/chapter/10.1007/978-3-319-10762-2_52) from [GitHub.](https://github.com/KernelA/nds-py)
+This directory contains external packages including [D-MPNN networks](https://pubs.acs.org/doi/10.1021/acscentsci.1c00546) and a [Pareto front search algorithm](https://link.springer.com/chapter/10.1007/978-3-319-10762-2_52) from [GitHub.](https://github.com/KernelA/nds-py)
 
 ### 5. figure_publication 
-This directory contains scripts to draw main/SI figures in the paper.
+This directory contains scripts to draw figures in the paper.
 
 ### 6. qm9_active_learning_add_100 / qm9_active_learning_add_1000
-This directory contains example scripts to perform active learning on QM9 for the figures in SI
+This directory contains example scripts to perform active learning on QM9 for the figures in Supporting Information.
 
 ### 7. run_calculation
 This directory contains scripts to run quantum chemistry calculations.
