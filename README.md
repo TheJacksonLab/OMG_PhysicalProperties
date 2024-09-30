@@ -17,7 +17,7 @@ conda env create -f environment.yml
 To run a script, a file path in the script should be modified to be consistent with an attempted directory.
 
 ### 1. active_learning
-This directory contains scripts to perform active learning campaign based on [evidential learning.](https://proceedings.neurips.cc/paper/2020/hash/aab085461de182608ee9f607f3f7d18f-Abstract.html) 
+This directory contains scripts to perform active learning campaign based on [evidential learning](https://proceedings.neurips.cc/paper/2020/hash/aab085461de182608ee9f607f3f7d18f-Abstract.html). 
 To use trained models, download `pareto_greedy_check_point.tar.gz` from [Zotero](TODO) and extract `pareto_greedy_check_point.tar.gz` with the following command:
 ```
 tar -xvzf pareto_greedy_check_point.tar.gz
@@ -28,13 +28,16 @@ The current file path in the scripts assume that the `pareto_greedy_check_point`
 This directory contains quantum chemistry calculation results during the active learning campaign. 
 For example, `./active_learning/pareto_greedy/OMG_train_batch_0_chemprop_with_reaction_id.csv` contains quantum chemistry calculation results from the initial train data. 
 Similarly, `./active_learning/pareto_greedy/OMG_train_batch_1_chemprop_with_reaction_id.csv` contains quantum chemistry calculation results from Round 1. 
-This directory also contains 200 RDKit features (`./rdkit_features`) used in training ML models to overcome [the local nature of message passing](https://pubs.acs.org/doi/10.1021/acs.jcim.9b00237) in graph neural networks.
+This directory also contains 200 RDKit features (`./rdkit_features`) used in training ML models to overcome [the local nature of message passing](https://pubs.acs.org/doi/10.1021/acs.jcim.9b00237) in graph neural networks.  
+
+The `examples` contains one example reaction of quantum chemistry calculations for different conformers.
+The full data can be downloaded at [Zotero](TODO).
 
 ### 3. experimental_chi
 This directory contains scripts to estimate Flory-Huggins interaction parameters from [COSMO-SAC](https://pubs.acs.org/doi/10.1021/ie001047w) calculations.
 
 ### 4. external_packages
-This directory contains external packages including [D-MPNN networks](https://pubs.acs.org/doi/10.1021/acscentsci.1c00546) and a [Pareto front search algorithm](https://link.springer.com/chapter/10.1007/978-3-319-10762-2_52) from [GitHub.](https://github.com/KernelA/nds-py)
+This directory contains external packages including [D-MPNN networks](https://pubs.acs.org/doi/10.1021/acscentsci.1c00546) and a [Pareto front search algorithm](https://link.springer.com/chapter/10.1007/978-3-319-10762-2_52) from [GitHub](https://github.com/KernelA/nds-py).
 
 ### 5. figure_publication 
 This directory contains scripts to draw figures in the paper.

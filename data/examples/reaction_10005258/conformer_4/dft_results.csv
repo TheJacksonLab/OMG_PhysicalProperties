@@ -1,0 +1,2 @@
+final_single_point_energy_(kcal_mol),min_partial_charge,max_partial_charge,HOMO_minus_1,HOMO,LUMO,LUMO_plus_1,dipole_moment,quadrupole_moment,polarizability,s1_energy,dominant_transition_energy,dominant_transition_oscillator_strength,t1_energy
+-1226916.2544004342,-0.345227,0.33645,-5.0191,-4.7124,-2.9078,-2.4027,3.4102,-139.34099,333.91947,1.808,3.2328776839999995,0.048805064,1.801

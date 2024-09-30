@@ -1,0 +1,24 @@
+! revPBE def2-SVP def2/J CPCMC(Toluene) Hirshfeld CHELPG RIJONX D3 Energy
+%pal
+nprocs 1
+end
+%maxcore 3000
+%elprop
+Polar 1
+Quadrupole True
+end
+%TDDFT
+NRoots 15
+Triplets True
+end
+* xyzfile 0 1 /home/sk77/PycharmProjects/omg_database_publication/run_calculation/calculation_results/pareto_greedy/0/reaction_10005258/opt_n_1/conformer_10/geometry.xtbopt.xyz
+
+# for cosmo solvent -> Flory Huggins
+$new_job
+! revPBE def2-SVP def2/J CPCMC Hirshfeld CHELPG RIJONX D3 Energy
+%base "/home/sk77/PycharmProjects/omg_database_publication/run_calculation/calculation_results/pareto_greedy/0/reaction_10005258/opt_n_1/conformer_10/property_cosmo"
+%pal
+nprocs 1
+end
+%maxcore 3000
+* xyzfile 0 1 /home/sk77/PycharmProjects/omg_database_publication/run_calculation/calculation_results/pareto_greedy/0/reaction_10005258/opt_n_1/conformer_10/geometry.xtbopt.xyz
