@@ -1,7 +1,7 @@
 # Functional monomer design for synthetically accessible polymers
 
-This repository contains python scripts used to obtain comprehensive monomer-level properties for [synthetically accessible Open Macromolecular Genome (OMG) polymers.](https://pubs.acs.org/doi/10.1021/acspolymersau.3c00003)  
-Trained ML models, conformer geometry, and ML-based monomer-level properties for 12M OMG polymers with prediction  
+This repository contains python scripts used to obtain comprehensive monomer-level properties for [synthetically accessible Open Macromolecular Genome (OMG) polymers.](https://pubs.acs.org/doi/10.1021/acspolymersau.3c00003) 
+Trained ML models, conformer geometry, and ML-based monomer-level properties for 12M OMG polymers with prediction 
 uncertainties are available at [Zotero](TODO).
 
 <p align="center">
