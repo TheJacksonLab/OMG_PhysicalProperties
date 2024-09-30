@@ -18,7 +18,7 @@ To run a script, a file path in the script should be modified to be consistent w
 
 ### 1. active_learning
 This directory contains scripts to perform active learning campaign based on [evidential learning.](https://proceedings.neurips.cc/paper/2020/hash/aab085461de182608ee9f607f3f7d18f-Abstract.html) 
-To use trained models, download "pareto_greedy_check_point.tar.gz" from [Zotero](TODO) and extract "pareto_greedy_check_point.tar.gz" with the following command.
+To use trained models, download 'pareto_greedy_check_point.tar.gz' from [Zotero](TODO) and extract "pareto_greedy_check_point.tar.gz" with the following command:
 ```
 tar -xvzf pareto_greedy_check_point.tar.gz
 ```
