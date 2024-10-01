@@ -6,7 +6,6 @@
 *.db
 *.pdf
 *.png
-*.txt
 *.npz
 *.pt
 *.json
