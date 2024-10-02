@@ -85,6 +85,7 @@ if __name__ == '__main__':
 
             # append
             heatmap_arr[row_idx, col_idx] = np.abs(r)  # absolute value
+            # heatmap_arr[row_idx, col_idx] = r  # no absolute value
             if np.abs(r) >= high_linear_threshold:
                 high_correlation_idx_list.append([row_idx, col_idx])
                 print(x_target, y_target)
@@ -94,8 +95,10 @@ if __name__ == '__main__':
 
     # r
     r_arr = np.array(r_list)
-    print(r_arr.shape)
-    print(np.sum(np.abs(r_arr) >= intermediate_linear_threshold))
+    print(r_arr.shape)  # 300
+    print(len(high_correlation_idx_list))  # 14
+    print(len(intermediate_correlation_idx_list))  # 30
+    print(np.sum(np.abs(r_arr) >= intermediate_linear_threshold))  # 44
 
     # create heatmap df
     df_heatmap = pd.DataFrame(columns=matrix_columns_list[:number_of_properties], data=heatmap_arr,
