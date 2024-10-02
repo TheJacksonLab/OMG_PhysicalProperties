@@ -11,7 +11,8 @@ from matplotlib.colors import LinearSegmentedColormap
 
 
 def kernel_density_estimation(arr: np.array, label, plot_min, plot_max, scatter_map,
-                              scaled_label, unscaled_label, reaction_id, low_eps, high_eps, low_z_idx, high_z_idx, save_file_path: str):
+                              reaction_id, low_z_reaction_id, high_z_reaction_id, z_ticks,
+                              low_eps, high_eps, save_file_path: str):
     """
     This function plots & saves a kernel density estimation of a given arr.
     arr is "scaled" arr.
@@ -22,24 +23,30 @@ def kernel_density_estimation(arr: np.array, label, plot_min, plot_max, scatter_
     std_value = z_target_std
 
     # get a low z
-    low_z_lower_bound = -1.5 - low_eps   # scaled
-    low_z_upper_bound = -1.5 + low_eps   # scaled
+    low_z_lower_bound = (-1.5 - low_eps) * std_value + mean_value  # unscaled
+    low_z_upper_bound = (-1.5 + low_eps) * std_value + mean_value  # unscaled
     low_z_value_idx = np.where((arr >= low_z_lower_bound) & (arr < low_z_upper_bound))[0]
-    low_z_reaction_id = reaction_id[low_z_value_idx][low_z_idx]
-    low_z_unscaled = arr[low_z_value_idx][low_z_idx] * std_value + mean_value
+
+    # find a molecule z value
+    low_z_reaction_id_index = np.where(reaction_id == low_z_reaction_id)[0]
+    possible_low_z_reaction_id = reaction_id[low_z_value_idx]
+    # print(f'Possible low Z reaction id: {possible_low_z_reaction_id}')
+    low_z_unscaled = arr[low_z_reaction_id_index]
     print(f"The number of possible low z values: {low_z_value_idx.shape[0]}")
-    # print(f'{reaction_id[low_z_value_idx]}')
     print(f"Low Z value reaction id: {low_z_reaction_id}")
     print(f"Low Z value (unscaled): {low_z_unscaled}")
 
     # get a high z
-    high_z_lower_bound = 1.5 - high_eps  # scaled
-    high_z_upper_bound = 1.5 + high_eps  # scaled
+    high_z_lower_bound = (1.5 - high_eps) * std_value + mean_value  # unscaled
+    high_z_upper_bound = (1.5 + high_eps) * std_value + mean_value  # unscaled
     high_z_value_idx = np.where((arr >= high_z_lower_bound) & (arr < high_z_upper_bound))[0]
-    high_z_reaction_id = reaction_id[high_z_value_idx][high_z_idx]
-    high_z_unscaled = arr[high_z_value_idx][high_z_idx] * std_value + mean_value
+
+    # find a molecule z value
+    high_z_reaction_id_index = np.where(reaction_id == high_z_reaction_id)[0]
+    possible_high_z_reaction_id = reaction_id[high_z_value_idx]
+    # print(f'Possible high Z reaction id: {possible_high_z_reaction_id}')
+    high_z_unscaled = arr[high_z_reaction_id_index]
     print(f"The number of possible high z values: {high_z_value_idx.shape[0]}")
-    # print(f'{reaction_id[high_z_value_idx]}')
     print(f"High Z value reaction id: {high_z_reaction_id}")
     print(f"High Z value (unscaled): {high_z_unscaled}")
 
@@ -47,26 +54,40 @@ def kernel_density_estimation(arr: np.array, label, plot_min, plot_max, scatter_
     density = stats.gaussian_kde(arr)
 
     # plot x
-    plot_x_list = np.arange(plot_min, plot_max, 0.01)
+    plot_x_list = np.arange(plot_min, plot_max, 0.001)
 
     # plot
     plt.figure(figsize=(6, 6))
+    # kde_min, kde_max = 1.0, 0.0
+    kde_min, kde_max = 0.0, 1.6
     for plot_x in plot_x_list:
-        plt.scatter(plot_x, density(plot_x), color=scatter_map.to_rgba(plot_x, norm=True))  # plot_x will be normalized inside the function.
+        density_plot = density(plot_x)
+        plt.scatter(plot_x, density_plot, color=scatter_map.to_rgba(plot_x, norm=True))  # plot_x will be normalized inside the function.
 
-    # plot low z (need to use scaled one)
-    low_z_scaled = arr[low_z_value_idx][low_z_idx]
-    plt.scatter(low_z_scaled, density(low_z_scaled), color='#231F20', alpha=1.0, marker='*', s=200.0)
+        # # assign min & max
+        # if density_plot < kde_min:
+        #     kde_min = density_plot
+        # if density_plot > kde_max:
+        #     kde_max = density_plot
 
-    # plot high z (need to use scaled one)
-    high_z_scaled = arr[high_z_value_idx][high_z_idx]
-    plt.scatter(high_z_scaled, density(high_z_scaled), color='#231F20', alpha=1.0, marker='*', s=200.0)
+    # vertical lines
+    plt.vlines(low_z_lower_bound, ymin=kde_min, ymax=kde_max, color="#7C8E8D", linestyles='dashed', linewidth=1.0)
+    plt.vlines(low_z_upper_bound, ymin=kde_min, ymax=kde_max, color="#7C8E8D", linestyles='dashed', linewidth=1.0)
+    plt.vlines(high_z_lower_bound, ymin=kde_min, ymax=kde_max, color="#7C8E8D", linestyles='dashed', linewidth=1.0)
+    plt.vlines(high_z_upper_bound, ymin=kde_min, ymax=kde_max, color="#7C8E8D", linestyles='dashed', linewidth=1.0)
 
-    plt.xticks(ticks=scaled_label, labels=unscaled_label)
-    plt.xticks(fontsize=24)
+    # plot low z (unscaled)
+    low_z_unscaled = arr[low_z_reaction_id_index]
+    plt.scatter(low_z_unscaled, density(low_z_unscaled), color='#231F20', alpha=1.0, marker='*', s=200.0, zorder=2)
+
+    # plot high z (unscaled)
+    high_z_unscaled = arr[high_z_reaction_id_index]
+    plt.scatter(high_z_unscaled, density(high_z_unscaled), color='#231F20', alpha=1.0, marker='*', s=200.0, zorder=2)
+
+    plt.xticks(z_ticks, fontsize=24)
     plt.yticks(fontsize=24)
     plt.ylabel('Probabilty density', fontsize=24)
-    plt.yticks(ticks=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5], labels=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5])
+    plt.yticks(ticks=[0.0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4])
     plt.tight_layout()
     plt.savefig(save_file_path, format='svg', dpi=1200)
     plt.savefig(save_file_path.replace('.svg', '.png'), dpi=1200)  # png
@@ -76,14 +97,19 @@ def kernel_density_estimation(arr: np.array, label, plot_min, plot_max, scatter_
 
 
 if __name__ == '__main__':
+    """
+    This script draws kernel density estimation from "unscaled" z values to get correct values of probability density.
+    """
     # plot to show a freedom of design. -> "un"correlated property-property correlation.
     plot_columns_list = ['normalized_monomer_phi_Boltzmann_average', 'dominant_transition_energy_Boltzmann_average',
                          'chi_parameter_water_mean']
-    plot_name = ['$\Phi_{\mathrm{monomer}}$ [unitless]', "$E^{\prime}_{\mathrm{singlet}}$ [eV]", '$\chi_{\mathrm{water}}$ [unitless]']
+    plot_name = ['$\Phi_{\mathrm{monomer}}$ [unitless]', "$E^{\prime}_{\mathrm{singlet}}$ [eV]",
+                 '$\chi_{\mathrm{water}}$ [unitless]']
     color_bar = ["#2F65ED", "#F5EF7E", "#F89A3F"]
 
     # load .csv
-    df = pd.read_csv('/home/sk77/PycharmProjects/omg_database_publication/figure_publication/data/diversity_sampled_predictions_AL3.csv')
+    df = pd.read_csv(
+        '/home/sk77/PycharmProjects/omg_database_publication/figure_publication/data/diversity_sampled_predictions_AL3.csv')
 
     # reaction id arr
     reaction_id_arr = df['reaction_id'].to_numpy(dtype='int')
@@ -118,17 +144,17 @@ if __name__ == '__main__':
     # scale doesn't affect the linear correlation and rank correlation
     x_target_arr = (x_target_arr - x_target_mean) / x_target_std
     y_target_arr = (y_target_arr - y_target_mean) / y_target_std
-    z_target_arr = (z_target_arr - z_target_mean) / z_target_std
+    # z_target_arr = (z_target_arr - z_target_mean) / z_target_std  # no scale z_target_arr
 
-    print(f"Z mean: {z_target_mean}")
-    print(f"Z std: {z_target_std}")
+    # print(f"Z mean: {z_target_mean}")
+    # print(f"Z std: {z_target_std}")
 
     # high & low threshold - scaled. 1 means -> one standard deviation
     x_high_threshold = 1
     x_low_threshold = -1
     y_high_threshold = 1
     y_low_threshold = -1
-    epsilon = 0.1
+    epsilon = 0.2
 
     # choose four different area -> plus minus epsilon range
     # (1) mean + 1 sigma (x) / mean + 1 sigma (y)
@@ -212,7 +238,7 @@ if __name__ == '__main__':
 
     # scatter plot
     ax = sns.scatterplot(x=x_target, y=y_target, hue=z_target, data=plot_df, palette=cmap, ax=g.ax_joint,
-                    edgecolor=None, alpha=0.75, legend=False, size=3.0)
+                         edgecolor=None, alpha=0.75, legend=False, s=7.5)
 
     # plot square region 1
     g.ax_joint.vlines(x=x_1_lower, ymin=y_1_lower, ymax=y_1_upper, color='#F2364D', linewidth=2.0)
@@ -282,66 +308,48 @@ if __name__ == '__main__':
     norm = plt.Normalize(plot_df[z_target].min(), plot_df[z_target].max())
     scatter_map = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
 
-    if not manual_tick:
-        # color bar ticks
-        zticks_range_to_plot_scaled = np.linspace(z_target_arr.min(), z_target_arr.max(), num=5, endpoint=True)
-        zticks_range_to_plot_unscaled = (zticks_range_to_plot_scaled * z_target_std) + z_target_mean
-        if abs(zticks_range_to_plot_unscaled.max()) >= 3:  # not 1
-            ztick_label = zticks_range_to_plot_unscaled.astype('int')
-        else:
-            ztick_label = [f'{value:.2f}' for value in zticks_range_to_plot_unscaled]
-    else:
-        zticks_range_to_plot_scaled = (np.array(manual_z_ticks) - z_target_mean) / z_target_std
-        zticks_range_to_plot_unscaled = manual_z_ticks
-        ztick_label = manual_z_ticks
-
     # Make space for the colorbar
     g.fig.subplots_adjust(bottom=0.2)
     cax = g.fig.add_axes([0.21, 0.06, 0.6, 0.02])  # l, b, w, h
     cbar = g.fig.colorbar(scatter_map, orientation='horizontal', cax=cax)
-    cbar.set_ticks(zticks_range_to_plot_scaled)
-    cbar.set_ticklabels([f'{label:.1f}' for label in zticks_range_to_plot_unscaled])  # colorbar labels.
+    cbar.set_ticks(manual_z_ticks)
     cbar.ax.tick_params(labelsize=16)
 
-    g.fig.savefig(os.path.join(save_dir, "freedom_square.png"), dpi=1200)
+    g.fig.savefig(os.path.join(save_dir, "unscaled_freedom_square.png"), dpi=1200)
     plt.close()
 
     # histogram 1
     print(z_1_target_arr.shape)
     kernel_density_estimation(z_1_target_arr, label=plot_name[-1], plot_min=z_target_arr.min(),
                               plot_max=z_target_arr.max(), scatter_map=scatter_map,
-                              scaled_label=zticks_range_to_plot_scaled, unscaled_label=ztick_label,
-                              save_file_path='./AL3_diverse/figure/freedom_region_1.svg',
-                              reaction_id=reaction_id_arr_1, low_eps=0.1, high_eps=0.1, low_z_idx=0, high_z_idx=0)
+                              z_ticks=manual_z_ticks,
+                              save_file_path='./AL3_diverse/figure/unscaled_freedom_region_1.svg',
+                              reaction_id=reaction_id_arr_1,
+                              low_z_reaction_id=1772481, high_z_reaction_id=3655215, low_eps=0.2, high_eps=0.2)
 
     # histogram 2
     print(z_2_target_arr.shape)
     kernel_density_estimation(z_2_target_arr, label=plot_name[-1], plot_min=z_target_arr.min(),
                               plot_max=z_target_arr.max(), scatter_map=scatter_map,
-                              scaled_label=zticks_range_to_plot_scaled, unscaled_label=ztick_label,
-                              save_file_path='./AL3_diverse/figure/freedom_region_2.svg',
-                              reaction_id=reaction_id_arr_2, low_eps=0.1, high_eps=0.1, low_z_idx=0, high_z_idx=0)
+                              z_ticks=manual_z_ticks,
+                              save_file_path='./AL3_diverse/figure/unscaled_freedom_region_2.svg',
+                              reaction_id=reaction_id_arr_2,
+                              low_z_reaction_id=3999522, high_z_reaction_id=9258272, low_eps=0.2, high_eps=0.2)
 
     # histogram 3
     print(z_3_target_arr.shape)
     kernel_density_estimation(z_3_target_arr, label=plot_name[-1], plot_min=z_target_arr.min(),
                               plot_max=z_target_arr.max(), scatter_map=scatter_map,
-                              scaled_label=zticks_range_to_plot_scaled, unscaled_label=ztick_label,
-                              save_file_path='./AL3_diverse/figure/freedom_region_3.svg',
-                              reaction_id=reaction_id_arr_3, low_eps=0.1, high_eps=0.2, low_z_idx=0, high_z_idx=1)
+                              z_ticks=manual_z_ticks,
+                              save_file_path='./AL3_diverse/figure/unscaled_freedom_region_3.svg',
+                              reaction_id=reaction_id_arr_3,
+                              low_z_reaction_id=4044344, high_z_reaction_id=4002812, low_eps=0.2, high_eps=0.2)
 
     # histogram 4
     print(z_4_target_arr.shape)
     kernel_density_estimation(z_4_target_arr, label=plot_name[-1], plot_min=z_target_arr.min(),
                               plot_max=z_target_arr.max(), scatter_map=scatter_map,
-                              scaled_label=zticks_range_to_plot_scaled, unscaled_label=ztick_label,
-                              save_file_path='./AL3_diverse/figure/freedom_region_4.svg',
-                              reaction_id=reaction_id_arr_4, low_eps=0.1, high_eps=0.1, low_z_idx=0, high_z_idx=0)
-
-    # full histogram
-    # print(z_target_arr.shape)
-    # kernel_density_estimation(z_target_arr, label=plot_name[-1], plot_min=z_target_arr.min(),
-    #                           plot_max=z_target_arr.max(), scatter_map=scatter_map,
-    #                           scaled_label=zticks_range_to_plot_scaled, unscaled_label=ztick_label,
-    #                           save_file_path='./AL3_diverse/figure/freedom_whole.svg',
-    #                           reaction_id=reaction_id_arr)
+                              z_ticks=manual_z_ticks,
+                              save_file_path='./AL3_diverse/figure/unscaled_freedom_region_4.svg',
+                              reaction_id=reaction_id_arr_4,
+                              low_z_reaction_id=11888541, high_z_reaction_id=6215927, low_eps=0.2, high_eps=0.2)

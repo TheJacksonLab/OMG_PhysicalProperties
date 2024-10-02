@@ -54,8 +54,8 @@ target_cols_list = [
 label_name_list_all = [
     ['$\Omega_\mathrm{A}$ [unitless]', '$\epsilon$ [unitless]', '$S_\mathrm{I}\;$[$\mathring{A}^{-2}g^{-1}$mol]',
      '$R_\mathrm{g}\;$[$\mathring{A}$]', '$\Omega_\mathrm{S}$ [unitless]'],
-    ['$E_{\mathrm{HOMO}\minus1}}$ [eV]', '$E_{\mathrm{HOMO}}$ [eV]', '$E_{\mathrm{LUMO}}$ [eV]', '$E_{\mathrm{LUMO}\plus1}$ [eV]', '$\mu$ [e$\cdot$$a_0$]',
-     '$q$ [e$\cdot$$a_0^2$]', '$\\alpha$ [$a_0^3$]'],
+    ['$E_{\mathrm{HOMO}\minus1}}$ [eV]', '$E_{\mathrm{HOMO}}$ [eV]', '$E_{\mathrm{LUMO}}$ [eV]', '$E_{\mathrm{LUMO}\plus1}$ [eV]', '$\mu$ [a.u.]',
+     '$q$ [a.u.]', '$\\alpha$ [a.u.]'],
     ['$E_{\mathrm{S}_1}$ [eV]', "$E^{\prime}_{\mathrm{singlet}}$ [eV]", "$f^{\prime}_{\mathrm{osc}}$ [unitless]", '$E_{\mathrm{T}_1}$ [eV]'],
     ['$\chi_{\mathrm{water}}$ [unitless]', '$\chi_{\mathrm{ethanol}}$ [unitless]', '$\chi_{\mathrm{chloroform}}$ [unitless]']
 ]
@@ -96,14 +96,14 @@ def calibration_curve(std_arr_to_calibrate: np.array, train_target_arr: np.array
     # plot
     if plot:
         plt.figure(figsize=(6, 6), dpi=300)
-        plt.plot(expected_p, obs_proportions, color='#2B84A0', label=f'Miscalibration area = {miscalibration_area:.3f}')
+        plt.plot(expected_p, obs_proportions, color='#2B84A0', label=f'Miscalibration area {miscalibration_area:.3f}')
         plt.plot([0, 1], [0, 1], linestyle='--', color='black', label='Ideal')
-        plt.title(property_name, fontsize=16)
-        plt.xticks(fontsize=16)
-        plt.yticks(fontsize=16)
-        plt.xlabel('Expected cumulative distribution', fontsize=16)
-        plt.ylabel('Observed cumulative distribution', fontsize=16)
-        plt.legend(fontsize=16, frameon=False, loc='lower right')
+        plt.title(property_name, fontsize=14)
+        plt.xticks(fontsize=14)
+        plt.yticks(fontsize=14)
+        plt.xlabel('Expected cumulative distribution', fontsize=14)
+        plt.ylabel('Observed cumulative distribution', fontsize=14)
+        plt.legend(fontsize=14)
         plt.tight_layout()
         plt.savefig(os.path.join(FIGURE_SAVE_DIR, f'calibration_{save_name}.png'))
         plt.close()
@@ -177,7 +177,7 @@ def decide_isotonic_scaling(train_std_arr, train_target_arr, train_pred_arr):
     ax_histy = fig.add_subplot(gs[1, 1], sharey=ax)
 
     # Draw the scatter plot and marginals.
-    ax_histx.tick_params(axis="x", labelbottom=False, labelsize=12, labelleft=False)
+    ax_histx.tick_params(axis="x", labelbottom=False, labelsize=12)
     ax_histy.tick_params(axis="y", labelleft=False, labelsize=12)
 
     # the scatter plot
@@ -299,8 +299,6 @@ def evaluate_calibration(linear_transformed_std_arr, isotonic_transformed_std_ar
         isotonic_cnt += 1
 
     # compare final results (in terms of three criteria)
-    print(f'Linear cnt: {linear_cnt}')
-    print(f'Isotonic cnt: {isotonic_cnt}')
     if linear_cnt > isotonic_cnt:
         return 0
     else:
@@ -355,7 +353,7 @@ if __name__ == '__main__':
             csv_file_dir = os.path.join(ACTIVE_LEARNING_DIR, f'{strategy}_check_point/current_batch_{current_batch}_train/gnn_{gnn_idx}/{dir_name}/fold_0')  # used for active learning.
             train_pred_results = pd.read_csv(os.path.join(csv_file_dir, 'train_pred.csv'))
             test_pred_results = pd.read_csv(os.path.join(csv_file_dir, 'test_pred.csv'))
-            
+
             # random shuffle for plot
             train_pred_results = train_pred_results.sample(frac=1).reset_index(drop=True)
             test_pred_results = test_pred_results.sample(frac=1).reset_index(drop=True)
@@ -382,13 +380,9 @@ if __name__ == '__main__':
             rank_correlation_object = spearmanr(a=train_abs_error, b=train_std_arr)  # the same when a and b are swapped.
             rank_correlation_coefficient = rank_correlation_object.statistic
 
-            # test rank correlation
-            test_rank_correlation_object = spearmanr(a=test_abs_error, b=test_std_arr)  # the same when a and b are swapped.
-            test_rank_correlation_coefficient = test_rank_correlation_object.statistic
-
             # plot
             fig = plt.figure(figsize=(6, 6), dpi=300)
-            gs = fig.add_gridspec(2, 2, width_ratios=(6, 1), height_ratios=(1, 6),
+            gs = fig.add_gridspec(2, 2, width_ratios=(4, 1), height_ratios=(1, 4),
                                   left=0.1, right=0.9, bottom=0.1, top=0.9,
                                   wspace=0.05, hspace=0.05)
             # Create the Axes.
@@ -400,22 +394,12 @@ if __name__ == '__main__':
             ax_histx.tick_params(axis="x", labelbottom=False, labelsize=12)
             ax_histy.tick_params(axis="y", labelleft=False, labelsize=12)
 
-            # don't show ticks
-            ax_histx.axes.get_yaxis().set_visible(False)
-            ax_histy.axes.get_xaxis().set_visible(False)
-
             # the scatter plot
-            ax.scatter(train_std_arr, train_abs_error, label=f'Train rank correlation: {rank_correlation_coefficient:.3f}', s=5, color='#BA5BBA', alpha=0.5)  # magenta #BA5BBA
-            print(f'Train rank correlation: {rank_correlation_coefficient:.3f}', flush=True)
-
-            # test scatter
-            ax.scatter(test_std_arr, test_abs_error, label=f'Test rank correlation: {test_rank_correlation_coefficient:.3f}', s=5, color='#6DC9C9', alpha=0.5)  # cyan  #6DC9C9
-            print(f'Test rank correlation: {test_rank_correlation_coefficient:.3f}', flush=True)
-
+            ax.scatter(train_std_arr, train_abs_error, label=f'Rank correlation: {rank_correlation_coefficient:.3f}', s=5, color='m')
             ax.xaxis.set_tick_params(labelsize=12)
             ax.yaxis.set_tick_params(labelsize=12)
-            # ax.set_xlabel(f'Uncertainty', fontsize=14)
-            # ax.set_ylabel(f'Absolute error', fontsize=14)
+            ax.set_xlabel('Uncertainty', fontsize=14)
+            ax.set_ylabel('Absolute error', fontsize=14)
 
             # now determine nice limits by hand:
             # binwidth = 0.25
@@ -424,10 +408,8 @@ if __name__ == '__main__':
 
             # bins = np.arange(-lim, lim + binwidth, binwidth)
             ax_histx.hist(train_std_arr, density=True, bins=100, color='m', alpha=0.5)
-            ax_histy.hist(train_abs_error, orientation='horizontal', density=True, bins=100, color='#BA5BBA', alpha=0.5)  # magenta #BA5BBA
-            ax_histx.hist(test_std_arr, density=True, bins=100, color='c', alpha=0.5)
-            ax_histy.hist(test_abs_error, orientation='horizontal', density=True, bins=100, color='#6DC9C9', alpha=0.5)  # cyan  #6DC9C9
-            # ax.legend(fontsize=12)
+            ax_histy.hist(train_abs_error, orientation='horizontal', density=True, bins=100, color='m', alpha=0.5)
+            ax.legend(fontsize=12)
             plt.savefig(os.path.join(FIGURE_SAVE_DIR, f'uncertainty_{target_columns}_before.png'))
             plt.close()
 
@@ -628,12 +610,11 @@ if __name__ == '__main__':
                 g.ax_joint.set_xticks(ticks=[0, 5, 10, 15, 20, 25, 30, 35])
                 g.ax_joint.set_yticks(ticks=[0, 5, 10, 15, 20, 25, 30, 35])
             g.ax_joint.tick_params(labelsize=16)
-            g.set_axis_labels(f'True {label_name}', f'Prediction {label_name}', fontsize=20)
+            g.set_axis_labels(f'True {label_name}', f'Prediction {label_name}', fontsize=16)
 
             # y=x
             g.ax_joint.plot([plot_min, plot_max], [plot_min, plot_max], color='#665A5E', linestyle='--', linewidth=1.5)
             g.ax_joint.plot([], [], label=f'$R^2$: {r2:.2f}')
-            print(r2)
             # g.ax_joint.plot([], [], label=f'$\\rho$  : {linear_correlation_coefficient:.2f}')
             g.ax_joint.legend(handlelength=0, fontsize=14, loc='upper left', frameon=False)
 
@@ -646,9 +627,9 @@ if __name__ == '__main__':
 
             # Make space for the colorbar
             g.fig.subplots_adjust(bottom=0.2)
-            # cax = g.fig.add_axes([0.20, 0.06, 0.6, 0.02])  # l, b, w, h
-            cax = g.fig.add_axes([0.20, 0.06, 0.6, 0.00])  # l, b, w, h / # for the large label size
+            cax = g.fig.add_axes([0.20, 0.06, 0.6, 0.02])  # l, b, w, h
             cbar = g.fig.colorbar(scatter_map, orientation='horizontal', cax=cax)
             cbar.ax.tick_params(labelsize=14)
             g.fig.savefig(os.path.join(FIGURE_SAVE_DIR, f'pred_test_{target_columns}.png'), dpi=1200)
             plt.close()
+

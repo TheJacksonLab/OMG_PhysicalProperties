@@ -151,9 +151,9 @@ if __name__ == '__main__':
     print('==================================================')
     print(f"The center molecule (methyl-terminated) is {methyl_terminated_smi_list[center_idx]}")
     print(f"The reaction_id is {reaction_id_list[center_idx]}")
-    # reactant_1, reactant_2, polymerization_mechanism_idx = find_reactants(reaction_id_list[center_idx])
-    # print(f"The reactants are {reactant_1, reactant_2}")
-    # print(f"The polymerization mechanism idx is {polymerization_mechanism_idx}")
+    reactant_1, reactant_2, polymerization_mechanism_idx = find_reactants(reaction_id_list[center_idx])
+    print(f"The reactants are {reactant_1, reactant_2}")
+    print(f"The polymerization mechanism idx is {polymerization_mechanism_idx}")
     print(f"The polarizability is {polarizability[center_idx]}")
     print(f"The dominant_singlet is {dominant_singlet[center_idx]}")
     print(f"The molecular_weight is {molecular_weight[center_idx]}")
@@ -168,9 +168,9 @@ if __name__ == '__main__':
     print('==================================================')
     print(f"The PC1 - 1 std moved (methyl-terminated) is {methyl_terminated_smi_list[target_molecule_idx_pc1_minus_std]}")
     print(f"The reaction_id is {reaction_id_list[target_molecule_idx_pc1_minus_std]}")
-    # reactant_1, reactant_2, polymerization_mechanism_idx = find_reactants(reaction_id_list[target_molecule_idx_pc1_minus_std])
-    # print(f"The reactants are {reactant_1, reactant_2}")
-    # print(f"The polymerization mechanism idx is {polymerization_mechanism_idx}")
+    reactant_1, reactant_2, polymerization_mechanism_idx = find_reactants(reaction_id_list[target_molecule_idx_pc1_minus_std])
+    print(f"The reactants are {reactant_1, reactant_2}")
+    print(f"The polymerization mechanism idx is {polymerization_mechanism_idx}")
     print(f"The polarizability is {polarizability[target_molecule_idx_pc1_minus_std]}")
     print(f"The dominant_singlet is {dominant_singlet[target_molecule_idx_pc1_minus_std]}")
     print(f"The molecular_weight is {molecular_weight[target_molecule_idx_pc1_minus_std]}")
@@ -183,9 +183,9 @@ if __name__ == '__main__':
     print('==================================================')
     print(f"The PC1 + 1 std moved (methyl-terminated) is {methyl_terminated_smi_list[target_molecule_idx_pc1_plus_std]}")
     print(f"The reaction_id is {reaction_id_list[target_molecule_idx_pc1_plus_std]}")
-    # reactant_1, reactant_2, polymerization_mechanism_idx = find_reactants(reaction_id_list[target_molecule_idx_pc1_plus_std])
-    # print(f"The reactants are {reactant_1, reactant_2}")
-    # print(f"The polymerization mechanism idx is {polymerization_mechanism_idx}")
+    reactant_1, reactant_2, polymerization_mechanism_idx = find_reactants(reaction_id_list[target_molecule_idx_pc1_plus_std])
+    print(f"The reactants are {reactant_1, reactant_2}")
+    print(f"The polymerization mechanism idx is {polymerization_mechanism_idx}")
     print(f"The polarizability is {polarizability[target_molecule_idx_pc1_plus_std]}")
     print(f"The dominant_singlet is {dominant_singlet[target_molecule_idx_pc1_plus_std]}")
     print(f"The molecular_weight is {molecular_weight[target_molecule_idx_pc1_plus_std]}")
@@ -198,29 +198,21 @@ if __name__ == '__main__':
     exp_var_pca = pca.explained_variance_ratio_
     plt.bar(range(1, len(exp_var_pca) + 1), exp_var_pca, alpha=0.5, align='center',
             label='Individual explained variance')
-    plt.xticks(fontsize=14)
-    plt.yticks(fontsize=14)
-    plt.ylabel('Explained variance ratio', fontsize=16)
-    plt.xlabel('Principal component index', fontsize=16)
-    # plt.legend(loc='best')
+    plt.ylabel('Explained variance ratio')
+    plt.xlabel('Principal component index')
+    plt.legend(loc='best')
     plt.tight_layout()
     plt.savefig(os.path.join(fig_save_dir, 'Explained_ratio.png'), dpi=300)
-    plt.savefig(os.path.join(fig_save_dir, 'Explained_ratio.svg'), dpi=1200, format='svg')
     plt.close()
 
     # eigenvector component 1
-    top_n = 25  # 25 -> all
+    top_n = 7  # 25 -> all
     pc1_vector = pca.components_[0]
     linear_contribution_pc1 = np.abs(pc1_vector)
     plot_idx = np.flip(np.argsort(linear_contribution_pc1))[:top_n]
-    # plt.figure(figsize=(7, 6))  # top_n = 5
-    # plt.figure(figsize=(12, 6))  # top_n = 8
-    plt.figure(figsize=(36, 6))  # top_n = 25
+    plt.figure(figsize=(7, 6))
     plt.bar([matrix_columns[idx] for idx in plot_idx], pc1_vector[plot_idx], alpha=0.5, align='center',
            color='#7C8E8D', width=0.25)
-    print(pc1_vector[plot_idx])
-    # print([matrix_columns[idx] for idx in plot_idx])
-    # exit()
     plt.axhline(y=0.0, linewidth=1, color='k')  # zero line
     plt.ylabel('PC1 contribution', fontsize=24)
     plt.xticks(fontsize=24)
