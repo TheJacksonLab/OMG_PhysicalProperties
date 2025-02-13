@@ -2,7 +2,7 @@
 
 This repository contains python scripts used to obtain comprehensive monomer-level properties for [synthetically accessible Open Macromolecular Genome (OMG) polymers.](https://pubs.acs.org/doi/10.1021/acspolymersau.3c00003) 
 Trained ML models, conformer geometry, and ML-based monomer-level properties for 12M OMG polymers with prediction 
-uncertainties are available at [Zotero](TODO).
+uncertainties are available at [Zenodo](https://zenodo.org/records/13863778).
 
 <p align="center">
 <img src="https://github.com/TheJacksonLab/OMG_PhysicalProperties/blob/main/figure_publication/TOC.png" width="500" height="250">
@@ -18,7 +18,7 @@ To run a script, a file path in the script should be modified to be consistent w
 
 ### 1. active_learning
 This directory contains scripts to perform active learning campaign based on [evidential learning](https://proceedings.neurips.cc/paper/2020/hash/aab085461de182608ee9f607f3f7d18f-Abstract.html). 
-To use trained models, download `pareto_greedy_check_point.tar.gz` from [Zotero](TODO) and extract `pareto_greedy_check_point.tar.gz` with the following command:
+To use trained models, download `pareto_greedy_check_point.tar.gz` from [Zenodo](https://zenodo.org/records/13863778) and extract `pareto_greedy_check_point.tar.gz` with the following command:
 ```
 tar -xvzf pareto_greedy_check_point.tar.gz
 ```
@@ -31,7 +31,7 @@ Similarly, `./active_learning/pareto_greedy/OMG_train_batch_1_chemprop_with_reac
 This directory also contains 200 RDKit features (`./rdkit_features`) used in training ML models to overcome [the local nature of message passing](https://pubs.acs.org/doi/10.1021/acs.jcim.9b00237) in graph neural networks.  
 
 The `examples` contains one example reaction of quantum chemistry calculations for different conformers.
-The full data can be downloaded at [Zotero](TODO).
+The full data can be downloaded at [Zenodo](https://zenodo.org/records/13863778).
 
 ### 3. experimental_chi
 This directory contains scripts to estimate Flory-Huggins interaction parameters from [COSMO-SAC](https://pubs.acs.org/doi/10.1021/ie001047w) calculations.

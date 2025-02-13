@@ -8,6 +8,5 @@ This directory contains external packages.
    - This directory was used to calculate 200 RDKit features.
  - `nds-py` from https://github.com/KernelA/nds-py.
    - This directory was used to perform a Pareto front search. 
-
-
-
+   - The wheel version in the requirement.txt was updated (wheel~=0.36 -> wheel>=0.38.1)
+   - The setuptools in the requirement.txt was updated (setuptools~=51.1 -> setuptools>=70.0.0)
